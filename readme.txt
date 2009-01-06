@@ -4,7 +4,7 @@ Donate link: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
 Tags: newsletter, tabloid, printable, pdf, tabloid, newspaper, magazine
 Requires at least: 2.5
 Tested up to: 2.5.1
-Stable tag: 1.0
+Stable tag: trunk
 
 'Make Tabbloid' integrates with the www.tabbloid.com service to create printer friendly 'tabloid' editions of your Wordpress blog in an attractive magazine/newspaper format.
 
