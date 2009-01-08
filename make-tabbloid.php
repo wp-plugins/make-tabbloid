@@ -5,7 +5,7 @@ Plugin URI: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
 Description: A plugin which integrates the www.tabbloid.com service to create printer friendly 'tabloid' editions of your Wordpress blog. You can add a link to your &quot;Tabbloid&quot edition as a widget or by adding <code>&lt;?php makeTabbloid('linkName','fileName', showThumbnail); ?&gt; </code> in your template (linkName and fileName are strings and showThumbnail is a boolean).  
 Author: Martin Hawksey
 Author URI: http://www.rsc-ne-scotland.org.uk/mashe
-Version: 0.9
+Version: 0.9.1
 */
 
 
@@ -51,9 +51,7 @@ class MakeTabbloid {
 	}
 	function printAdminPage() {
 			$devOptions = $this->getAdminOptions();
-			if 	($devOptions['mt_validkey']=='true'){
-				$devOptions['mt_feeds'] = mt_getFeeds(get_option('tabbloid_api_key'));
-			}
+			
 			if (isset($_POST['update_makeTabbloidPluginSeriesSettings'])) { 
 				if (isset($_POST['makeTabbloidAPIKey'])) {
 					$devOptions['mt_validkey'] = mt_checkAPI($_POST['makeTabbloidAPIKey']);
@@ -81,6 +79,9 @@ class MakeTabbloid {
 <div class="updated"><p><strong><?php _e("Feed Removed - ".$mt_feedResult, "MakeTabbloid");?></strong></p></div>
 					 <?php 
 			}
+			if 	($devOptions['mt_validkey']=='true'){
+				$devOptions['mt_feeds'] = mt_getFeeds(get_option('tabbloid_api_key'));
+			}
 					 ?>
 <div class=wrap>
 <h2>Make Tabbloid</h2>
@@ -96,13 +97,12 @@ class MakeTabbloid {
 <?php if ($devOptions['mt_validkey']=='true'){ ?>
 	<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 	<h3>Add Blog Feed</h3>
-	<input name="mt_addFeed" type="text" size="70" value="<?php echo get_bloginfo_rss('rss2_url') ?>rss/">
+	<input name="mt_addFeed" type="text" size="70" value="<?php echo get_bloginfo_rss('rss2_url') ?>">
 	<span class="submit" style="border-top:none;" >
 	<input type="submit" name="update_makeTabbloidAddFeed" value="<?php _e('Add Feed', 'MakeTabbloidPluginSeries') ?>" />
 	</span>
 	<h3>Current Feeds</h3>
 	<p>You can add a link to your &quot;Tabbloid&quot edition via the <a href="widgets.php">widgets</a> or by adding <code>&lt;?php makeTabbloid('linkName','fileName', showThumbnail); ?&gt; </code> in your template. </p>
-    <p><strong>Note:</strong> There is a delay in feeds being registered or removed from the Tabbloid service (usually a couple of seconds). You can <a href="options-general.php?page=make-tabbloid.php">refresh this page by clicking here</a>.</p>
 	<?php
 	if (count($devOptions['mt_feeds'])>1){
 		echo "<ul>";

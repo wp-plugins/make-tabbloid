@@ -4,9 +4,9 @@ Donate link: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
 Tags: newsletter, tabloid, printable, pdf, tabloid, newspaper, magazine
 Requires at least: 2.5
 Tested up to: 2.5.1
-Stable tag: trunk
+Stable tag: 0.9.1
 
-'Make Tabbloid' integrates with the www.tabbloid.com service to create printer friendly 'tabloid' editions of your Wordpress blog in an attractive magazine/newspaper format.
+'Make Tabbloid' integrates with the www.tabbloid.com service to create printer friendly 'tabloid' edition of your Wordpress blog.
 
 == Description ==
 
@@ -33,9 +33,6 @@ If widgets aren't your thing you can call the makeTabbloid function from your te
 
 Either [Tabbloid](http://www.tabbloid.com) is struggling with your RSS feed or your feed is making its way to the front of the queue to be tabloided. Try going to www.tabbloid.com, adding your feed url and clicking 'Generate sample issue now'. If it doesn't generate a PDF either wait an hour and try again or drop a line to the techies at Tabbloid.    
 
-= When I add or remove a feed the list in settings doesn't update =
-
-It can take www.tabbloid.com a couple of seconds to update it's cache. Wait a couple of seconds before refreshing.
 
 = Why doesn't the thumbnail appear?  =
 
