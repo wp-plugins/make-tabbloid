@@ -1,4 +1,3 @@
-<<<<<<< .mine
 <?php
 /*
 Plugin Name: Make Tabbloid
@@ -698,4 +697,3 @@ if (isset($mt_pluginSeries)) {
 	add_action('activate_make-tabbloid/make-tabbloid.php',  array(&$mt_pluginSeries, 'init'));
 }
 ?>
->>>>>>> .r86592
