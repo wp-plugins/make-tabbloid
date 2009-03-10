@@ -4,7 +4,7 @@ Donate link: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
 Tags: newsletter, tabloid, printable, pdf, tabloid, newspaper, magazine
 Requires at least: 2.5
 Tested up to: 2.7.1
-Stable tag: 0.9.3
+Stable tag: 0.9.4
 
 'Make Tabbloid' integrates with the www.tabbloid.com service to create printer friendly 'tabloid' edition of your Wordpress blog.
 
@@ -57,8 +57,11 @@ If you used version 0.9.2 or earlier and used the function makeTabbloid('linkNam
 
 == Changelog ==
 
-**0.9.3** - Major update
+**0.9.4** - Bug Fix
 
+* Fixed custom feed (?feed=make-tabbloid) to prevent redirect to Feedburner
+
+**0.9.3** - Major update
 
 * Fixed the duplicate function 
 * Included a custom feed for tabbloid which automatically footnotes all the links within posts and uses TinyURL to shorten any long links
