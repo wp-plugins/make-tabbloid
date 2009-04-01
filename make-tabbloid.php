@@ -5,7 +5,7 @@ Plugin URI: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
 Description: A plugin which integrates the www.tabbloid.com service to create printer friendly 'tabloid' editions of your Wordpress blog. You can add a link to your &quot;Tabbloid&quot edition as a widget or by adding <code>&lt;?php do_makeTabbloid('linkName','fileName', showThumbnail); ?&gt; </code> in your template (linkName and fileName are strings and showThumbnail is a boolean).  
 Author: Martin Hawksey
 Author URI: http://www.rsc-ne-scotland.org.uk/mashe
-Version: 0.9.4.1
+Version: 0.9.4.2
 */
 
 
@@ -367,7 +367,7 @@ if (!function_exists("MakeTabbloidPluginSeries_ap")) {
 		}
 	}	
 }
-function mt_prevent_feedburner()
+function mt_prevent_feedburner(){
 	if ( 'make-tabbloid' == get_query_var('feed') )
 		remove_action('template_redirect', 'ol_feed_redirect');
 }
