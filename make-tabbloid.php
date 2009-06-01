@@ -5,7 +5,7 @@ Plugin URI: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
 Description: A plugin which integrates the www.tabbloid.com service to create printer friendly 'tabloid' editions of your Wordpress blog. You can add a link to your &quot;Tabbloid&quot edition as a widget or by adding <code>&lt;?php do_makeTabbloid('linkName','fileName', showThumbnail); ?&gt; </code> in your template (linkName and fileName are strings and showThumbnail is a boolean).  
 Author: Martin Hawksey
 Author URI: http://www.rsc-ne-scotland.org.uk/mashe
-Version: 0.9.4.2
+Version: 0.9.5
 */
 
 
@@ -128,10 +128,11 @@ class MakeTabbloid {
 	} else {
 		echo "<tr><td colspan='2'><em>None</em></td></tr>";
 	}
+
  ?>
  </table>
 	<h3>Additional Information</h3>
-	<p>You can add a link to your &quot;Tabbloid&quot; edition via the <a href="widgets.php">widgets</a> or by adding <code>&lt;?php do_makeTabbloid('linkName','fileName', showThumbnail); ?&gt; </code> in your template. </p>
+	<p>You can add a link to your &quot;Tabbloid&quot; edition via the <a href="widgets.php">widgets</a> or by adding <code>&lt;?php do_makeTabbloid('linkName','fileName', showThumbnail, 'bannerText'); ?&gt; </code> in your template. </p>
  </form>
  </div>
  <?php } ?>
@@ -140,7 +141,7 @@ class MakeTabbloid {
 	
    }//End Class MakeTabbloid
 }//End If !class_not_exist
-function do_makeTabbloid($mt_linkname, $mt_filename, $mt_preview){
+function do_makeTabbloid($mt_linkname, $mt_filename, $mt_preview, $mt_banner){
 	$myFile = $mt_filename.".pdf";
 	if (file_exists($myFile)){
 		$lastBuild = filemtime($myFile) - strtotime(get_lastpostdate());
@@ -153,11 +154,10 @@ function do_makeTabbloid($mt_linkname, $mt_filename, $mt_preview){
 	} 
 	if ($lastBuild < 0 || $fileSize < 1024){ // start check to see if posts have been made since last file was made
 		$api_key = get_option('tabbloid_api_key');
-		$pdfData = tabbliodHTTPPost($api_key, 'make_pdf','');
-		$fh = fopen($myFile, 'w') or die("can't open file");
-		fwrite($fh, $pdfData);
+		$pdfData = tabbliodHTTPPost($api_key, 'make_pdf',$mt_banner);
+		$fh = fopen($myFile, 'wb') or die("can't open file");
+		$fileSize = fwrite($fh, tabbliodHTTPPost($api_key, 'make_pdf',$mt_banner));
 		fclose($fh);
-		$fileSize = filesize($myFile);
 		if ($fileSize > 1024){
 		 $fileBuilt = TRUE;
 		}
@@ -222,16 +222,18 @@ function mt_removeFeed($api_key,$mt_feed){
 		$result = tabbliodHTTPPost($api_key, 'remove_feed', $mt_feed);
 		return $result;
 }
-function tabbliodHTTPPost($api_key, $method, $feed_name){
+function tabbliodHTTPPost($api_key, $method, $param){
 			// Prepare POST request
 			$build_array  = array(
 					'api_key' => $api_key,
 					'method'  => $method
 				);
 			if ($method == 'add_feed'){
-				$build_array['feed_url'] = $feed_name;
+				$build_array['feed_url'] = $param;
 			} elseif ($method == 'remove_feed'){
-				$build_array['feed_id'] = $feed_name;
+				$build_array['feed_id'] = $param;
+			} elseif ($method == 'make_pdf' && $param!=""){
+				$build_array['banner'] = $param;
 			}
 			$request_data = http_build_query($build_array);
 			// Send the POST request (with cURL)
@@ -251,7 +253,7 @@ function widget_make_tabbloid($args) {
   echo $before_widget; 
   echo $before_title . $options['mt_title'] . $after_title; 
   echo $options['mt_text'];
-  do_makeTabbloid($options['mt_link_name'],$options['mt_file_name'],$options['mt_show_preview']);
+  do_makeTabbloid($options['mt_link_name'],$options['mt_file_name'],$options['mt_show_preview'],$options['mt_banner_name']);
   echo $after_widget;
 }
 function widget_make_tabbloid_init() {
@@ -273,6 +275,7 @@ function widget_make_tabbloid_control() {
     $options['mt_text'] = $widget_data['mt_text'];
     $options['mt_link_name'] = $widget_data['mt_link_name'];
 	$options['mt_file_name'] = $widget_data['mt_file_name'];
+	$options['mt_banner_name'] = $widget_data['mt_banner_name'];
 	$options['mt_show_preview'] = $widget_data['mt_show_preview'];
 
     update_option(MAKE_TABBLOID_WIDGET_ID, $options);
@@ -283,6 +286,7 @@ function widget_make_tabbloid_control() {
   $mt_text = $options['mt_text'];
   $mt_link_name = $options['mt_link_name'];
   $mt_file_name = $options['mt_file_name'];
+  $mt_banner_name = $options['mt_banner_name'];
   $mt_show_preview = $options['mt_show_preview'];
   
   ?>
@@ -323,6 +327,15 @@ function widget_make_tabbloid_control() {
     name="<?php echo MAKE_TABBLOID_WIDGET_ID; ?>[mt_file_name]" 
     id="<?php echo MAKE_TABBLOID_WIDGET_ID; ?>-mt-file-name" 
     value="<?php echo $mt_file_name; ?>"/>
+</p>
+  <label for="<?php echo MAKE_TABBLOID_WIDGET_ID;?>-mt-banner-name">
+    The banner text of your issue (default is Today's Tabbloid):
+  </label>
+  <input class="widefat" 
+    type="text"
+    name="<?php echo MAKE_TABBLOID_WIDGET_ID; ?>[mt_banner_name]" 
+    id="<?php echo MAKE_TABBLOID_WIDGET_ID; ?>-mt-banner-name" 
+    value="<?php echo $mt_banner_name; ?>"/>
 </p>
 <p>
   <label for="<?php echo MAKE_TABBLOID_WIDGET_ID;?>-mt-show-preview">
