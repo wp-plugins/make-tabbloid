@@ -4,7 +4,7 @@ Donate link: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
 Tags: newsletter, tabloid, printable, pdf, tabloid, newspaper, magazine
 Requires at least: 2.5
 Tested up to: 2.7.1
-Stable tag: 0.9.5
+Stable tag: 0.9.5.1
 
 'Make Tabbloid' integrates with the www.tabbloid.com service to create printer friendly 'tabloid' edition of your Wordpress blog.
 
@@ -13,6 +13,8 @@ Stable tag: 0.9.5
 The 'Make Tabbloid' plugin integrates with HP's [Tabbloid Service](http://www.tabbloid.com) to automatically create printer friendly 'tabloid' editions of your Wordpress blog in an attractive magazine/newspaper format.
 
 The plugin includes a widget to let you control how you advertise your 'tabloid edition'. You can also choose to display a thumbnail of your custom newlestter (powered by [http://view.samurajdata.se/](http://view.samurajdata.se/)) to let your readers see what they are missing. 
+
+*NEW!* - You can now customise the banner text of your pdf publication (default is Today's Tabbloid)
 
 If widgets aren't your thing you can call the makeTabbloid function from your template.
 
@@ -57,6 +59,10 @@ If you used version 0.9.2 or earlier and used the function makeTabbloid('linkNam
 
 == Changelog ==
 
+**0.9.5.1** - Minor Bug Fix and Readme update
+
+* Minor fix to a bug in the widget control panel 
+
 **0.9.5** - Update/Fix
 
 * Implemented the ability to customise the banner/header text used in the pdf publication. It can be controlled via the widget menu or calling the function do_makeTabbloid('linkName','fileName', showThumbnail, 'bannerTitle').
@@ -64,11 +70,11 @@ If you used version 0.9.2 or earlier and used the function makeTabbloid('linkNam
 
 **0.9.4.2** - Minor Bug Fix
 
-* Minor fix for Parse error: syntax error, unexpected T_IF, expecting ‘{’ in …/wp-content/plugins/make-tabbloid/make-tabbloid.php on line 371
+* Minor fix for Parse error: syntax error, unexpected T_IF, expecting '{' in .../wp-content/plugins/make-tabbloid/make-tabbloid.php on line 371
 
 **0.9.4.1** - Minor Bug Fix
 
-* Minor fix to the prevent Feedburner redirect (Fixes: call_user_func_array() [function.call-user-func-array]: First argument is expected to be a valid callback, ‘mt_ prevent_feedburner’ was given in /wp-includes/plugin.php on line 339)
+* Minor fix to the prevent Feedburner redirect (Fixes: call_user_func_array() [function.call-user-func-array]: First argument is expected to be a valid callback, 'mt_ prevent_feedburner' was given in /wp-includes/plugin.php on line 339)
 
 **0.9.4** - Bug Fix
 
