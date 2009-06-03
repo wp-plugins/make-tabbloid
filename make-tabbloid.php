@@ -162,7 +162,7 @@ function do_makeTabbloid($mt_linkname, $mt_filename, $mt_preview, $mt_banner){
 		 $fileBuilt = TRUE;
 		}
 	}
-	$pdfURL = str_replace(" ","%20",get_bloginfo('url')."/".$myFile);
+	$pdfURL = str_replace(" ","%20",get_bloginfo('url')."/".$mt_filename.".pdf");
 	// Prepare POST request
 	if ($mt_preview == "TRUE"){
 		$build_array  = array(
