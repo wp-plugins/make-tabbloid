@@ -2,10 +2,10 @@
 /*
 Plugin Name: Make Tabbloid
 Plugin URI: http://www.rsc-ne-scotland.org.uk/mashe/make-tabbloid-plugin/
-Description: A plugin which integrates the www.tabbloid.com service to create printer friendly 'tabloid' editions of your Wordpress blog. You can add a link to your &quot;Tabbloid&quot edition as a widget or by adding <code>&lt;?php do_makeTabbloid('linkName','fileName', showThumbnail); ?&gt; </code> in your template (linkName and fileName are strings and showThumbnail is a boolean).  
+Description: A plugin which integrates the www.tabbloid.com service to create printer friendly 'tabloid' editions of your Wordpress blog. You can add a link to your &quot;Tabbloid&quot edition as a widget or by adding <code>&lt;?php do_makeTabbloid('linkName','fileName', showThumbnail, 'bannerText'); ?&gt; </code> in your template (for an explanation of these see the readme file).  
 Author: Martin Hawksey
 Author URI: http://www.rsc-ne-scotland.org.uk/mashe
-Version: 0.9.5.2
+Version: 0.9.6
 */
 
 
@@ -40,7 +40,7 @@ class MakeTabbloid {
 			$this->getAdminOptions();
 	}
 	function getAdminOptions() {
-			$MakeTabbloidAdminOptions = array('mt_apikey' => '', 'mt_validkey' => 'false', 'mt_feeds' => array());
+			$MakeTabbloidAdminOptions = array('mt_apikey' => '', 'mt_validkey' => 'false', 'mt_feeds' => array(), 'mt_qrcodeshow' => 'false' );
 			$devOptions = get_option($this->adminOptionsName);
 			if (!empty($devOptions)) {
 				foreach ($devOptions as $key => $option)
@@ -69,7 +69,13 @@ class MakeTabbloid {
 				} elseif ($_POST['mt_addFeedSelect'] != "custom")  {
 					$mt_feedToAdd = $_POST['mt_addFeedSelect'];
 				}
-				$mt_feedResult = mt_addFeed(get_option('tabbloid_api_key'),$mt_feedToAdd);						
+				$mt_feedResult = mt_addFeed(get_option('tabbloid_api_key'),$mt_feedToAdd);	
+				if ($_POST['mt_qrcodeshow'] == 'true' ){
+					 $devOptions['mt_qrcodeshow'] = "true";
+				} else {
+					$devOptions['mt_qrcodeshow'] = "false";
+				}
+				update_option($this->adminOptionsName, $devOptions);
 				?>
 <div class="updated"><p><strong><?php _e("Feed Added - ".$mt_feedResult, "MakeTabbloid");?></strong></p></div>
 					<?php
@@ -99,18 +105,19 @@ class MakeTabbloid {
 <?php if ($devOptions['mt_validkey']=='true'){ ?>
 	<form method="post" action="<?php echo $actionString; ?>">
 	<h3>Add Blog Feed</h3>
-	<p>Make Tabbloid comes with a custom RSS specifically designed for the Tabbloid service. This feed automatically footnotes all the links within your posts and uses TinyURL to shorten any long links. <a href="<?php echo (get_bloginfo_rss('wpurl').'/?feed=make-tabbloid') ?>" target="_blank">Click here to preview how your custom feed looks</a>.</p>
+	<p>Make Tabbloid comes with a custom 'Make Tabbloid RSS' specifically designed for the Tabbloid service. This feed automatically footnotes all the links within your posts and uses TinyURL to shorten any long links. The 'Make Tabbloid RSS' also has the option to embed a QR code at the end of each post within the PDF.</p>
 	<p>Select your preferred option: 
-	  <select name="mt_addFeedSelect" id="mt_addFeed">
+	
+	  <select name="mt_addFeedSelect" id="mt_addFeed" onChange="if( this.selectedIndex == '1' ){document.getElementById('mt_qrcode').style.display = 'inline';} else {document.getElementById('mt_qrcode').style.display = 'none';}">
 	    <option value="custom">-Select-</option>
 	    <option value="<?php echo (get_bloginfo('wpurl').'/?feed=make-tabbloid') ?>">Make Tabbloid RSS</option>
 	    <option value="<?php echo get_bloginfo_rss('rss2_url') ?>">Default RSS</option>
       </select>
-</p>
-	<p>Or you can add your own custom feed:<br/> 	
-	<input name="mt_addFeedCustom" type="text" size="70" value=""></p>
-	<span class="submit" style="border-top:none;" >
-	<input type="submit" name="update_makeTabbloidAddFeed" value="<?php _e('Add Feed', 'MakeTabbloidPluginSeries') ?>" />
+	  <div id="mt_qrcode" style="display:none;">Include QR code in 'Make Tabbloid RSS': <input name="mt_qrcodeshow" type="checkbox" value="true" <?php if ($devOptions['mt_qrcodeshow'] == "true") echo "checked";?> /></div>
+	</p>
+	<p>Or you can add your own custom feed:<br/> 	<input name="mt_addFeedCustom" type="text" size="70" value=""></p>
+	<span class="submit">
+	<input type="submit" name="update_makeTabbloidAddFeed" value="<?php _e('Add Feed/Save Change', 'MakeTabbloidPluginSeries') ?>" />
 	</span>
 	<h3>Current Feeds</h3>
 	<p>These are the current feeds registered with the Tabbloid service.</p>
@@ -182,7 +189,7 @@ function do_makeTabbloid($mt_linkname, $mt_filename, $mt_preview, $mt_banner){
 			$previewID = substr($result,$strStart,$strEnd-$strStart);
 		}
 		if (strlen($previewID) < 64){
-			$previewHTML = "<div style=\"font-size:80%; font-style:italic;\" align=\"center\"><a href=\"".$pdfURL."\" target=\"_blank\" ><img src=\"http://view.samurajdata.se/rsc/".$previewID."/tmp1.gif\" width=\"150\" height=\"194\"/></a><br/>Preview powered by:<br/><a href=\"http://view.samurajdata.se\" target=\"_blank\" \">http://view.samurajdata.se</a></div>";
+			$previewHTML = "<div style=\"font-size:80%; font-style:italic;\" align=\"center\"><a href=\"".$pdfURL."\" target=\"_blank\" ><img src=\"http://view.samurajdata.se/rsc/".$previewID."/tmp1.gif\" width=\"150\" height=\"194\"/></a><br/>Preview powered by:<br/><a href=\"http://view.samurajdata.se\" target=\"_blank\">http://view.samurajdata.se</a></div>";
 		}
 	}
 	if ($fileBuilt){?>
